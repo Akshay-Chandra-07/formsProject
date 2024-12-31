@@ -1,0 +1,12 @@
+<div class="main">
+    <div class="form-box">
+        <form [formGroup]="signForm" (ngSubmit)="onSubmit(signForm)">
+            <input [ngClass]="{'invalid':(signForm.controls.email.invalid && signForm.controls.email.touched)}" type="email" placeholder="email" formControlName="email" >
+            <input [ngClass]="{'invalid':(signForm.controls.name.invalid && signForm.controls.name.touched)}" type="text" placeholder="Name" formControlName="name">
+            <input [ngClass]="{'invalid':(signForm.controls.username.invalid && signForm.controls.username.touched)}" type="text" placeholder="Username" formControlName="username">
+            <input [ngClass]="{'invalid':(signForm.controls.password.invalid && signForm.controls.password.touched)}" type="password" placeholder="Password" formControlName="password">
+            <button type="submit" [disabled]="signForm.invalid">SignUp</button>
+        </form>
+        <button (click)="onLogin()">Login</button>
+    </div>
+</div>

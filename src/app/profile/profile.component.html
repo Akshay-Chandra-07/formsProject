@@ -1,0 +1,40 @@
+<table *ngIf="data | async as data">
+  <tr>
+    <label for="">User Id :</label>
+    <td>{{ data.id }}</td>
+  </tr>
+  <tr>
+    <label for="">Username :</label>
+    <td>{{ data.username }}</td>
+  </tr>
+  <tr>
+    <label for="">Name :</label>
+    <td>{{ data.name }}</td>
+  </tr>
+  <tr>
+    <label for="">Email:</label>
+    <td>{{ data.email }}</td>
+  </tr>
+</table>
+<button *ngIf="!editToken" (click)="editDetails()">Edit</button>
+<button *ngIf="editToken" (click)="editDetails()">Cancel</button>
+
+<div *ngIf="editToken">
+  <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+    <label for="">Name:</label>
+    <app-custom-input type="text" formControlName="name"></app-custom-input>
+    <label for="">Email:</label>
+    <app-custom-input type="text" formControlName="email"></app-custom-input>
+    <label for="">Old Password:</label>
+    <app-custom-input
+      type="text"
+      formControlName="oldPassword"
+    ></app-custom-input>
+    <label for="">New Password:</label>
+    <app-custom-input
+      type="text"
+      formControlName="newPassword"
+    ></app-custom-input>
+    <button type="submit">Submit</button>
+  </form>
+</div>

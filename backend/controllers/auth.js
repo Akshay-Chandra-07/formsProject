@@ -1,5 +1,7 @@
 const Users = require('../models/users')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+require('dotenv').config({path:'../.env'})
 
 exports.register = async (req,res)=>{
     const {name,email,username,password} = req.body;
@@ -8,9 +10,7 @@ exports.register = async (req,res)=>{
     console.log(username)
     console.log(password)
     try{
-        console.log(1)
         bool = await Users.query().findOne({username})
-        console.log(2);
         if(bool){
             return res.status(200).json({msg:"Username taken!"})
         }
@@ -25,6 +25,7 @@ exports.register = async (req,res)=>{
 }
 
 exports.login = async (req,res)=>{
+    console.log("Login")
     const {username,password} = req.body
     try{
         bool = await Users.query().findOne({username})
@@ -32,7 +33,8 @@ exports.login = async (req,res)=>{
             pass = await bcrypt.compare(password,bool.password)
             // console.log(pass)
             if(pass){
-                return res.status(200).json({msg:"Logged in!"})
+                const tokenKey = jwt.sign({id:bool.id},process.env.JWT_SECRETKEY)
+                return res.status(200).json({msg:"Logged in!",token : tokenKey,id:bool.id})
             }
             return res.status(200).json({error:"Invalid Password!"})
         }

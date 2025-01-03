@@ -4,7 +4,7 @@ import { HttpInterceptorFn } from '@angular/common/http';
 import { httpInterceptorInterceptor } from './http-interceptor.interceptor';
 
 describe('httpInterceptorInterceptor', () => {
-  const interceptor: HttpInterceptorFn = (req, next) => 
+  const interceptor: HttpInterceptorFn = (req, next) =>
     TestBed.runInInjectionContext(() => httpInterceptorInterceptor(req, next));
 
   beforeEach(() => {
@@ -15,4 +15,3 @@ describe('httpInterceptorInterceptor', () => {
     expect(interceptor).toBeTruthy();
   });
 });
-

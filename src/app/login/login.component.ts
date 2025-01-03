@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ChangeDetectionStrategy,OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
@@ -32,32 +32,31 @@ export class LoginComponent implements OnDestroy {
     password: new FormControl('', [
       Validators.required,
       Validators.minLength(4),
-      Validators.maxLength(10),
     ]),
   });
 
   onSubmit() {
     const form = this.loginForm;
     console.log(form);
-    
+
     this.http
-    .login(form.value.username!, form.value.password!)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe({
-      next: (data: any) => {
-        console.log(data.msg);
-        sessionStorage.setItem('token', data.token!);
-        this.router.navigateByUrl(`/dashboard/${data.id}`)
-      },
-      error: (e) => {
-        console.log(e);
-      },
-    });
+      .login(form.value.username!, form.value.password!)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data: LoginResponse) => {
+          console.log(data.msg);
+          sessionStorage.setItem('token', data.token!);
+          this.router.navigateByUrl(`/dashboard/${data.id}`);
+        },
+        error: (e) => {
+          console.log(e);
+        },
+      });
   }
   onSignup() {
     this.router.navigateByUrl('/signup');
   }
-  
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();

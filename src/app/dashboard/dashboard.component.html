@@ -7,7 +7,7 @@
     <th>Username</th>
   </thead>
   <tbody>
-    <tr *ngFor="let row of data |async">
+    <tr *ngFor="let row of data | async;trackBy:track">
       <td>{{ row.id }}</td>
       <td>{{ row.name }}</td>
       <td>{{ row.email }}</td>
@@ -15,4 +15,3 @@
     </tr>
   </tbody>
 </table>
-

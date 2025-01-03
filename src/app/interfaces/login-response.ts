@@ -1,5 +1,5 @@
 export interface LoginResponse {
-    msg : string;
-    token? : string;
-    id? : number;
+  msg: string;
+  token?: string;
+  id?: number;
 }

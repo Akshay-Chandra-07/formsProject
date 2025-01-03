@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment'
+import { environment } from '../../environments/environment';
 import { RegisterResponse } from '../interfaces/register-response';
 import { LoginResponse } from '../interfaces/login-response';
 import { ActivatedRoute } from '@angular/router';
@@ -10,21 +10,21 @@ import { ActivatedRoute } from '@angular/router';
   providedIn: 'root',
 })
 export class HttpserviceService {
-  constructor(private http: HttpClient,private route:ActivatedRoute) {}
+  constructor(private http: HttpClient, private route: ActivatedRoute) {}
   apiUrl = environment.apiUrl;
-  curId:any;
-  checkToken(){
+  curId: string = '';
+  checkToken() {
     return sessionStorage.getItem('token');
   }
-  setId(id:any){
+  setId(id: string) {
     this.curId = id;
   }
-  sendId(){
+  sendId() {
     return this.curId;
   }
   register(
     username: string,
-    email:  string,
+    email: string,
     name: string,
     password: string
   ): Observable<RegisterResponse> {
@@ -37,7 +37,10 @@ export class HttpserviceService {
   }
 
   login(username: string, password: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { username, password });
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, {
+      username,
+      password,
+    });
   }
 }
 

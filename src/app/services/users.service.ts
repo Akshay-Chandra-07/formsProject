@@ -5,19 +5,29 @@ import { User } from '../interfaces/user';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UsersService {
-
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) {}
   apiUrl = environment.apiUrl;
-  getUsers(){
-    return this.http.get(`${this.apiUrl}/dashboard`);
+  getUsers(): Observable<Array<User>> {
+    return this.http.get<Array<User>>(`${this.apiUrl}/dashboard`);
   }
-  getUser(id:string):Observable<User>{
+  getUser(id: string): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/profile/${id}`);
   }
-  updateDetails(id:string,name?:string,email?:string,oldPassword?:string,newPassword?:string):Observable<User>{
-    return this.http.put<User>(`${this.apiUrl}/profile/${id}/update`,{name,email,oldPassword,newPassword});
+  updateDetails(
+    id: string,
+    name?: string,
+    email?: string,
+    oldPassword?: string,
+    newPassword?: string
+  ): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/profile/${id}/update`, {
+      name,
+      email,
+      oldPassword,
+      newPassword,
+    });
   }
 }

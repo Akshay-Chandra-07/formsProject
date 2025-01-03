@@ -38,7 +38,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   editForm = new FormGroup({
     name: new FormControl(''),
-    email: new FormControl('', [Validators.email]),
+    email: new FormControl('', Validators.email),
     oldPassword: new FormControl(''),
     newPassword: new FormControl(''),
   });
@@ -48,7 +48,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.data = this.userService
       .getUser(this.id)
       .pipe(takeUntil(this.destroy$));
-    this.httpService.setId(this.route.snapshot.paramMap.get('id'));
+    this.httpService.setId(this.route.snapshot.paramMap.get('id')!);
   }
 
   editDetails() {

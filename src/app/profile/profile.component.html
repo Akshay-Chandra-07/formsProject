@@ -15,6 +15,11 @@
     <label for="">Email:</label>
     <td>{{ data.email }}</td>
   </tr>
+  <tr>
+    {{
+      data.msg
+    }}
+  </tr>
 </table>
 <button *ngIf="!editToken" (click)="editDetails()">Edit</button>
 <button *ngIf="editToken" (click)="editDetails()">Cancel</button>
@@ -24,7 +29,13 @@
     <label for="">Name:</label>
     <app-custom-input type="text" formControlName="name"></app-custom-input>
     <label for="">Email:</label>
-    <app-custom-input type="text" formControlName="email"></app-custom-input>
+    <app-custom-input
+      type="text"
+      formControlName="email"
+      [class.invalid]="
+        editForm.controls.email.invalid && editForm.controls.email.touched
+      "
+    ></app-custom-input>
     <label for="">Old Password:</label>
     <app-custom-input
       type="text"
@@ -35,6 +46,13 @@
       type="text"
       formControlName="newPassword"
     ></app-custom-input>
-    <button type="submit">Submit</button>
+    <button
+      [disabled]="
+        editForm.controls.email.touched && !editForm.controls.email.valid
+      "
+      type="submit"
+    >
+      Submit
+    </button>
   </form>
 </div>

@@ -1,4 +1,4 @@
-import { Component, forwardRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -7,19 +7,20 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   templateUrl: './custom-input.component.html',
   providers: [
     {
-      provide : NG_VALUE_ACCESSOR,
-      useExisting : forwardRef(()=>CustomInputComponent),
-      multi : true
-    }
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => CustomInputComponent),
+      multi: true,
+    },
   ],
-  styleUrl: './custom-input.component.css'
+  styleUrl: './custom-input.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CustomInputComponent implements ControlValueAccessor{
-  value: string = "";
+export class CustomInputComponent implements ControlValueAccessor {
+  value: string = '';
   onChange: any = () => {};
   onTouch: any = () => {};
 
-  constructor() { }
+  constructor() {}
 
   writeValue(value: any) {
     this.value = value;
@@ -40,5 +41,4 @@ export class CustomInputComponent implements ControlValueAccessor{
     this.onChange(this.value);
     this.onTouch();
   }
-  
 }

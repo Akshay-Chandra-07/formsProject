@@ -6,14 +6,24 @@ import { authGuard } from './guards/auth.guard';
 import { ProfileComponent } from './profile/profile.component';
 
 export const routes: Routes = [
-    {path:'signup',component:SignupComponent,
-        children:[
-            {path:'',component:LoginComponent, outlet:'login'},
-        ]
-    },
-    {path:'login',component:LoginComponent},
-    {path:'dashboard/:id',component:DashboardComponent, canActivate: [authGuard]},
-    {path:'profile/:id',component:ProfileComponent, canActivate: [authGuard]},
-    {path:'',redirectTo:'/signup',pathMatch:'full'},
-    {path:"**",redirectTo:'/signup',pathMatch:'full'}
+  {
+    path: 'signup',
+    children: [{ path: '', component: LoginComponent, outlet: 'login' }],
+    loadComponent: () => import('./signup/signup.component').then(m => m.SignupComponent),
+  },
+  { path: 'login',
+    loadComponent: () => import('./login/login.component').then(m=>m.LoginComponent)
+  },
+  {
+    path: 'dashboard/:id',
+    canActivate: [authGuard],
+    loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent),
+  },
+  {
+    path: 'profile/:id',
+    canActivate: [authGuard],
+    loadComponent: () => import('./profile/profile.component').then(m => m.ProfileComponent),
+  },
+  { path: '', redirectTo: '/signup', pathMatch: 'full' },
+  { path: '**', redirectTo: '/signup', pathMatch: 'full' },
 ];

@@ -1,26 +1,53 @@
 <div class="main">
   <div class="form-box">
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <input
-        [class.invalid]="
+      <app-custom-input
+        label="Username:"
+        [errorMessage]="
           loginForm.controls.username.invalid &&
           loginForm.controls.username.touched
+            ? 'Username required'
+            : ''
         "
         type="text"
         placeholder="Username"
         formControlName="username"
-      />
-      <input
-        [class.invalid]="
+      ></app-custom-input>
+      <app-custom-input
+        label="Password:"
+        [errorMessage]="
           loginForm.controls.password.invalid &&
           loginForm.controls.password.touched
+            ? 'Password required'
+            : ''
         "
         type="password"
         placeholder="Password"
         formControlName="password"
-      />
-      <button type="submit" [disabled]="loginForm.invalid">Log In</button>
+      ></app-custom-input>
+      <div class="buttons">
+        <button type="submit" [disabled]="loginForm.invalid">Log In</button>
+        <button class="signButton" (click)="onSignup()">SignUp</button>
+      </div>
     </form>
-    <button (click)="onSignup()">SignUp</button>
   </div>
 </div>
+
+<!-- <input
+  [class.invalid]="
+    loginForm.controls.username.invalid &&
+    loginForm.controls.username.touched
+  "
+  type="text"
+  placeholder="Username"
+  formControlName="username"
+/>
+<input
+  [class.invalid]="
+    loginForm.controls.password.invalid &&
+    loginForm.controls.password.touched
+  "
+  type="password"
+  placeholder="Password"
+  formControlName="password"
+/> -->

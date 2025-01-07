@@ -1,7 +1,100 @@
 <div class="main">
   <div class="form-box">
     <form [formGroup]="signForm" (ngSubmit)="onSubmit(signForm)">
-      <input
+      <app-custom-input
+        label="Email:"
+        class="customInput"
+        [errorMessage]="
+          signForm.controls.email.invalid && signForm.controls.email.touched
+            ? 'Please enter valid email'
+            : ''
+        "
+        type="email"
+        placeholder="Email"
+        formControlName="email"
+      ></app-custom-input>
+      <app-custom-input
+        label="Name:"
+        [errorMessage]="
+          signForm.controls.name.invalid && signForm.controls.name.touched
+            ? 'Name required'
+            : ''
+        "
+        type="text"
+        placeholder="Name"
+        formControlName="name"
+      ></app-custom-input>
+      <app-custom-input
+        label="Username:"
+        [errorMessage]="
+          signForm.controls.username.invalid &&
+          signForm.controls.username.touched
+            ? 'Username required'
+            : ''
+        "
+        type="text"
+        placeholder="Username"
+        formControlName="username"
+      >
+      </app-custom-input>
+      <app-custom-dropdown
+        label="Role:"
+        [options]="roles"
+        formControlName="role"
+      ></app-custom-dropdown>
+      <app-custom-input
+        label="Password:"
+        [errorMessage]="
+          signForm.controls.password.invalid &&
+          signForm.controls.password.touched
+            ? 'Password required'
+            : ''
+        "
+        type="password"
+        placeholder="Password"
+        formControlName="password"
+      ></app-custom-input>
+      <div class="buttons">
+        <button type="submit" [disabled]="signForm.invalid">SignUp</button>
+        <button (click)="onLogin()">Login</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<router-outlet name="login"></router-outlet>
+<!-- <router-outlet></router-outlet> -->
+
+<!-- <input
+  [ngClass]="{
+    invalid:
+    signForm.controls.username.invalid &&
+    signForm.controls.username.touched
+  }"
+  type="text"
+  placeholder="Username"
+  formControlName="username"
+  /> -->
+<!-- <input
+  [ngClass]="{
+    invalid:
+    signForm.controls.password.invalid &&
+    signForm.controls.password.touched
+  }"
+  type="password"
+    placeholder="Password"
+    formControlName="password"
+    /> -->
+<!-- <input
+    [ngClass]="{
+      invalid:
+      signForm.controls.name.invalid && signForm.controls.name.touched
+      }"
+      type="text"
+      placeholder="Name"
+      formControlName="name"
+      /> -->
+<!-- <input
         [ngClass]="{
           invalid:
             signForm.controls.email.invalid && signForm.controls.email.touched
@@ -9,41 +102,4 @@
         type="email"
         placeholder="email"
         formControlName="email"
-      />
-      <input
-        [ngClass]="{
-          invalid:
-            signForm.controls.name.invalid && signForm.controls.name.touched
-        }"
-        type="text"
-        placeholder="Name"
-        formControlName="name"
-      />
-      <input
-        [ngClass]="{
-          invalid:
-            signForm.controls.username.invalid &&
-            signForm.controls.username.touched
-        }"
-        type="text"
-        placeholder="Username"
-        formControlName="username"
-      />
-      <input
-        [ngClass]="{
-          invalid:
-            signForm.controls.password.invalid &&
-            signForm.controls.password.touched
-        }"
-        type="password"
-        placeholder="Password"
-        formControlName="password"
-      />
-      <button type="submit" [disabled]="signForm.invalid">SignUp</button>
-    </form>
-    <button (click)="onLogin()">Login</button>
-  </div>
-</div>
-
-<router-outlet name="login"></router-outlet>
-<!-- <router-outlet></router-outlet> -->
+      /> -->

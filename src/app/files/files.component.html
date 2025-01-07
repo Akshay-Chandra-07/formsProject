@@ -1,0 +1,35 @@
+<div *ngIf="!userFiles?.length"><h5>No Files to show!</h5></div>
+
+<table *ngIf="userFiles?.length">
+  <thead>
+    <tr>
+      <th>File ID</th>
+      <th>User Id</th>
+      <th>Filename</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let file of userFiles; let i = index; trackBy: trackByFn">
+      <td>{{ file.id }}</td>
+      <td>{{ file.user_id }}</td>
+      <td>{{ file.filename }}</td>
+      <td>
+        <button>
+          <a [href]="file.directory" target="_blank">Open File</a>
+        </button>
+        <button (click)="deleteFile(file.id)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br /><br />
+<form [formGroup]="uploadForm">
+  <input
+    type="file"
+    formControlName="fileInput"
+    multiple
+    (change)="onFiles($event)"
+  />
+  <button type="button" (click)="onSubmit()">Submit</button>
+</form>

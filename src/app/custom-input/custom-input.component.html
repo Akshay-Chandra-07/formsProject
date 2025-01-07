@@ -1,6 +1,21 @@
-<input
+<!-- <input
   type="text"
+  [placeholder]="placeholder"
   (blur)="onTouch($event)"
   (input)="onInput($event)"
   [value]="value"
-/>
+/> -->
+
+<div class="input-container">
+  <label for="">{{ label }}</label>
+  <div class="inner-container">
+    <input
+      [type]="type"
+      [placeholder]="placeholder"
+      (blur)="onTouch($event)"
+      (input)="onInput($event)"
+      [value]="value"
+    />
+    <span *ngIf="errorMessage" ngClass="error">{{ errorMessage }}</span>
+  </div>
+</div>

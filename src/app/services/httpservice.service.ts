@@ -26,18 +26,20 @@ export class HttpserviceService {
     username: string,
     email: string,
     name: string,
+    role: string,
     password: string
   ): Observable<RegisterResponse> {
-    return this.http.post<RegisterResponse>(`${this.apiUrl}/signup`, {
+    return this.http.post<RegisterResponse>(`${this.apiUrl}/auth/signup`, {
       username,
       email,
       name,
+      role,
       password,
     });
   }
 
   login(username: string, password: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, {
       username,
       password,
     });

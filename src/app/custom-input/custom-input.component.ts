@@ -1,9 +1,15 @@
-import { ChangeDetectionStrategy, Component, forwardRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  forwardRef,
+  Input,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'app-custom-input',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './custom-input.component.html',
   providers: [
     {
@@ -16,10 +22,13 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomInputComponent implements ControlValueAccessor {
-  value: string = '';
+  @Input() value: string = '';
   onChange: any = () => {};
   onTouch: any = () => {};
-
+  @Input() label: string = '';
+  @Input() placeholder: string = '';
+  @Input() errorMessage: string = '';
+  @Input() type: string = '';
   constructor() {}
 
   writeValue(value: any) {

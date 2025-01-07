@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const authRoute = require("./routes/authRoute");
+const dashboardRoute = require("./routes/dashboardRoute");
+const profileRoute = require("./routes/profileRoute");
 const { errorlogger } = require("./middlewares/errorHandler");
 
 const { Model } = require("objection");
@@ -18,7 +20,7 @@ const config = {
     database: process.env.DB_NAME,
   },
   migrations: {
-    directory: path.join(__dirname, "migrations"),
+    directory: path.join(__dirname, "./util/migrations"),
   },
 };
 
@@ -40,7 +42,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 app.use("/api/auth", authRoute);
+app.use("/api/dashboard", dashboardRoute);
+app.use("/api/profile", profileRoute);
 
 app.use(errorlogger);
 

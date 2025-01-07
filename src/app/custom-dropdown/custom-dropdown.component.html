@@ -1,0 +1,10 @@
+<div class="drop-down">
+  <label for="">{{ label }}</label>
+  <div class="drop-menu">
+    <select (change)="onInput($event)">
+      <option *ngFor="let data of options; let i = index" [value]="data">
+        {{ data }}
+      </option>
+    </select>
+  </div>
+</div>

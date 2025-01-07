@@ -3,20 +3,20 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config({ path: "../.env" });
 
-exports.register = async (req, res) => {
-  const { name, email, username, password } = req.body;
+exports.register = async (req, res, next) => {
+  const { name, email, username, password, role } = req.body;
   try {
     bool = await Users.query().findOne({ username });
     if (bool) {
       return res.status(200).json({ msg: "Username taken!" });
     }
     hashPass = await bcrypt.hash(password, 10);
-    console.log(hashPass);
     newUser = await Users.query().insert({
       name,
       email,
       username,
       password: hashPass,
+      role,
     });
     res.status(201).json({ msg: "User created" });
   } catch (error) {
@@ -24,7 +24,7 @@ exports.register = async (req, res) => {
   }
 };
 
-exports.login = async (req, res ,next ) => {
+exports.login = async (req, res, next) => {
   const { username, password } = req.body;
   try {
     bool = await Users.query().findOne({ username });

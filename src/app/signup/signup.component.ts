@@ -13,16 +13,26 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { LoginComponent } from '../login/login.component';
 import { RegisterResponse } from '../interfaces/register-response';
+import { CustomInputComponent } from '../custom-input/custom-input.component';
+import { CustomDropdownComponent } from '../custom-dropdown/custom-dropdown.component';
 
 @Component({
   selector: 'app-signup',
-  imports: [RouterOutlet, FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [
+    RouterOutlet,
+    FormsModule,
+    ReactiveFormsModule,
+    CommonModule,
+    CustomInputComponent,
+    CustomDropdownComponent,
+  ],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SignupComponent implements OnDestroy {
   private destroy$ = new Subject<void>();
+  roles: Array<string> = ['normal', 'admin'];
 
   constructor(private router: Router, private http: HttpserviceService) {}
 
@@ -32,8 +42,8 @@ export class SignupComponent implements OnDestroy {
     username: new FormControl('', [
       Validators.required,
       Validators.minLength(4),
-      Validators.maxLength(10),
     ]),
+    role: new FormControl('normal'),
     password: new FormControl('', [
       Validators.required,
       Validators.minLength(4),
@@ -41,11 +51,15 @@ export class SignupComponent implements OnDestroy {
   });
 
   onSubmit(form: FormGroup) {
+    console.log(form);
+    console.log(this.signForm);
+
     this.http
       .register(
         form.value.username,
         form.value.email,
         form.value.name,
+        form.value.role,
         form.value.password
       )
       .pipe(takeUntil(this.destroy$))

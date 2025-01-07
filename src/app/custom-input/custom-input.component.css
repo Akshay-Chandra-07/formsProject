@@ -1,3 +1,19 @@
-input{
-    padding: 0;
+.input-container {
+  display: flex;
+  width: 15rem;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+* {
+  /* border: 1px solid red; */
+}
+
+.inner-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.error {
+  color: red;
+  font-size: 0.8rem;
 }

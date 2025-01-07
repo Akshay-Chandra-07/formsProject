@@ -1,0 +1,11 @@
+.drop-down {
+  display: flex;
+  justify-content: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+select {
+  min-width: 10.7rem;
+  height: 1.25rem;
+}

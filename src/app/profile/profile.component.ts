@@ -5,9 +5,9 @@ import {
   OnInit,
 } from '@angular/core';
 import { UsersService } from '../services/users.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { takeUntil, Subject, Observable } from 'rxjs';
+import { takeUntil, Subject, Observable, catchError, of } from 'rxjs';
 import {
   FormControl,
   FormGroup,
@@ -17,10 +17,17 @@ import {
 import { CustomInputComponent } from '../custom-input/custom-input.component';
 import { User } from '../interfaces/user';
 import { HttpserviceService } from '../services/httpservice.service';
+import { FilesComponent } from '../files/files.component';
 
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule, ReactiveFormsModule, CustomInputComponent],
+  imports: [
+    RouterOutlet,
+    CommonModule,
+    ReactiveFormsModule,
+    CustomInputComponent,
+    FilesComponent,
+  ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,9 +37,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
   id: string = '';
   destroy$ = new Subject<void>();
   editToken: boolean = false;
+  isRefreshed: boolean = false;
   constructor(
     private userService: UsersService,
     private route: ActivatedRoute,
+    private router: Router,
     private httpService: HttpserviceService
   ) {}
 
@@ -45,18 +54,21 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id')!;
-    this.data = this.userService
-      .getUser(this.id)
-      .pipe(takeUntil(this.destroy$));
+    this.data = this.userService.getUser(this.id).pipe(
+      takeUntil(this.destroy$),
+      catchError((error) => {
+        console.log(error);
+        sessionStorage.removeItem('token');
+        this.router.navigateByUrl('/login');
+        return of();
+      })
+    );
     this.httpService.setId(this.route.snapshot.paramMap.get('id')!);
+    this.isRefreshed = true;
   }
 
   editDetails() {
     this.editToken = !this.editToken;
-  }
-
-  closeEdit() {
-    this.editDetails();
   }
 
   onSubmit() {
@@ -68,7 +80,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.editForm.value.oldPassword ?? undefined,
         this.editForm.value.newPassword ?? undefined
       )
-      .pipe(takeUntil(this.destroy$));
+      .pipe(
+        takeUntil(this.destroy$),
+        catchError((error) => {
+          console.log(error);
+          sessionStorage.removeItem('token');
+          this.router.navigateByUrl('/login');
+          return of();
+        })
+      );
     this.editDetails();
   }
 

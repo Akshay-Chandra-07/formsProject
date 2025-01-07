@@ -12,10 +12,11 @@ import {
 import { Router } from '@angular/router';
 import { HttpserviceService } from '../services/httpservice.service';
 import { LoginResponse } from '../interfaces/login-response';
+import { CustomInputComponent } from '../custom-input/custom-input.component';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, FormsModule],
+  imports: [ReactiveFormsModule, FormsModule, CustomInputComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

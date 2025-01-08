@@ -11,7 +11,7 @@ import { HttpserviceService } from '../services/httpservice.service';
 import { CommonModule } from '@angular/common';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { File } from '../interfaces/file';
+import { userFile } from '../interfaces/userFile';
 import { User } from '../interfaces/user';
 import { UsersService } from '../services/users.service';
 
@@ -30,7 +30,7 @@ export class FilesComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef
   ) {}
   files = new FormData();
-  userFiles: Array<File> | undefined;
+  userFiles: Array<userFile> | undefined;
   destroy$ = new Subject<void>();
   loggedUser: User | undefined;
   @Input() refreshed: boolean = false;
@@ -76,7 +76,7 @@ export class FilesComponent implements OnInit, OnDestroy {
       .sendFiles(this.files, id)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (data: any) => {
+        next: (data: Object) => {
           console.log(data);
           this.getUserFiles();
         },
@@ -90,12 +90,12 @@ export class FilesComponent implements OnInit, OnDestroy {
 
   getAllUserFiles(id: string) {
     this.filesService.getAllUserFiles(id).subscribe({
-      next: (data: any) => {
+      next: (data: userFile[]) => {
         console.log(data);
         this.userFiles = data;
         this.cdr.detectChanges();
       },
-      error: (error: any) => {
+      error: (error) => {
         console.log(error);
       },
     });
@@ -104,12 +104,12 @@ export class FilesComponent implements OnInit, OnDestroy {
   getUserFiles() {
     const id = this.httpService.sendId();
     this.filesService.getUserFiles(id).subscribe({
-      next: (data: any) => {
+      next: (data: userFile[]) => {
         console.log(data);
         this.userFiles = data;
         this.cdr.detectChanges();
       },
-      error: (error: any) => {
+      error: (error) => {
         console.log(error);
       },
     });
@@ -120,7 +120,7 @@ export class FilesComponent implements OnInit, OnDestroy {
     console.log(fileId);
     const id = this.httpService.sendId();
     this.filesService.deleteFileById(id, fileId).subscribe({
-      next: (data) => {
+      next: (data:Object) => {
         console.log(data);
         this.getUserFiles();
       },

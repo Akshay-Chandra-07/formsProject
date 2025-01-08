@@ -12,12 +12,11 @@ import { takeUntil } from 'rxjs/operators';
 import { HttpserviceService } from '../services/httpservice.service';
 import { Observable, Subject } from 'rxjs';
 import { User } from '../interfaces/user';
-import { CustomInputComponent } from '../custom-input/custom-input.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, CustomInputComponent, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,7 +28,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   destroy$ = new Subject<void>();
   refreshTable: boolean = false;
   editToggle: boolean = false;
-  userData: any;
 
   constructor(
     private userService: UsersService,

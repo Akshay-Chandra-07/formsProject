@@ -78,7 +78,11 @@ export class FilesComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data: Object) => {
           console.log(data);
-          this.getUserFiles();
+          if(this.loggedUser?.role == "admin"){
+            this.getAllUserFiles(id)
+          }else{
+            this.getUserFiles();
+          }
         },
         error: (error) => {
           console.log(error);

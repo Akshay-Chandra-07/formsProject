@@ -5,7 +5,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { UsersService } from '../services/users.service';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { takeUntil, Subject, Observable, catchError, of } from 'rxjs';
 import {
@@ -22,7 +22,6 @@ import { FilesComponent } from '../files/files.component';
 @Component({
   selector: 'app-profile',
   imports: [
-    RouterOutlet,
     CommonModule,
     ReactiveFormsModule,
     CustomInputComponent,

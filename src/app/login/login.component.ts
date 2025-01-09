@@ -22,7 +22,10 @@ import { CustomInputComponent } from '../custom-input/custom-input.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent implements OnDestroy {
-  constructor(private router: Router, private http: HttpserviceService) {}
+  constructor(
+    private router: Router,
+    private http: HttpserviceService,
+  ) {}
   private destroy$ = new Subject<void>();
   loginForm = new FormGroup({
     username: new FormControl('', [
@@ -47,7 +50,7 @@ export class LoginComponent implements OnDestroy {
         next: (data: LoginResponse) => {
           console.log(data.msg);
           sessionStorage.setItem('token', data.token!);
-          this.router.navigateByUrl(`/dashboard/${data.id}`);
+          this.router.navigateByUrl(`/dashboard`);
         },
         error: (e) => {
           console.log(e);

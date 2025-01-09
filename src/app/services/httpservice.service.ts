@@ -10,7 +10,10 @@ import { ActivatedRoute } from '@angular/router';
   providedIn: 'root',
 })
 export class HttpserviceService {
-  constructor(private http: HttpClient, private route: ActivatedRoute) {}
+  constructor(
+    private http: HttpClient,
+    private route: ActivatedRoute,
+  ) {}
   apiUrl = environment.apiUrl;
   curId: string = '';
   checkToken() {
@@ -27,7 +30,7 @@ export class HttpserviceService {
     email: string,
     name: string,
     role: string,
-    password: string
+    password: string,
   ): Observable<RegisterResponse> {
     return this.http.post<RegisterResponse>(`${this.apiUrl}/auth/signup`, {
       username,

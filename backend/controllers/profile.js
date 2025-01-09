@@ -5,11 +5,23 @@ const Files = require("../models/files");
 exports.getUser = async (req, res, next) => {
   try {
     user = await Users.query()
-      .select("name", "id", "email", "username", "role")
-      .findById(req.params.id);
+      .select("name", "id", "email", "username", "role", "user_picture")
+      .findById(req.userId);
     return res.status(200).json(user);
   } catch (error) {
     next(error);
+  }
+};
+
+exports.updatePicture = async (req, res, next) => {
+  try {
+    newProfile = await Users.query().patchAndFetchById(req.userId, {
+      user_picture: `http://localhost:5000/uploads/${req.files[0].filename}`,
+    });
+    return res.status(201).json(newProfile);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ msg: "Error updating picture" });
   }
 };
 
@@ -22,45 +34,46 @@ exports.deleteUser = async (req, res, next) => {
     next(error);
   }
 };
-exports.updateDetails = async (req, res, next) => {
-  getCurDetails = await Users.query().findById(req.params.id);
+exports.updatePassword = async (req, res, next) => {
+  getCurDetails = await Users.query().findById(req.userId);
 
-  const { name, email, oldPassword, newPassword } = req.body;
-  const availData = {}; // to store available data to update
-
-  // check which data is available to update
-  if (name) availData.name = name;
-  if (email) availData.email = email;
-  if (oldPassword && newPassword) {
-    console.log(oldPassword, newPassword);
-    bool = await bcrypt.compare(oldPassword, getCurDetails.password);
-    console.log(bool);
-    if (!bool) {
-      getCurDetails.msg = "Incorrect password";
-      return res.status(200).json(getCurDetails);
-    } else {
-      newHashPass = await bcrypt.hash(newPassword, 10);
-      availData.password = newHashPass;
-    }
+  const { oldPassword, newPassword } = req.body;
+  bool = await bcrypt.compare(oldPassword, getCurDetails.password);
+  if (!bool) {
+    getCurDetails.msg = "Incorrect password";
+    return res.status(200).json(getCurDetails);
+  } else {
+    newHashPass = await bcrypt.hash(newPassword, 10);
   }
   try {
-    if (availData.name || availData.email || availData.password) {
-      console.log(availData);
-      newUser = await Users.query()
-        .findById(req.params.id)
-        .patchAndFetchById(req.params.id, availData);
-      return res.status(201).json(newUser);
-    }
-    getCurDetails.msg = "No data to update";
-    return res.status(200).json(getCurDetails);
+    newUser = await Users.query()
+      .findById(req.userId)
+      .patchAndFetchById(req.userId, { password: newHashPass });
+    return res.status(201).json(newUser);
   } catch (error) {
-    next(error);
+    console.log(error);
+    return res.status(400).json({ msg: "Internal Error" });
+  }
+};
+
+exports.updateNameEmail = async (req, res, next) => {
+  try {
+    console.log(req.body);
+
+    await Users.query()
+      .findById(req.body.id)
+      .patch({ name: req.body.name, email: req.body.email });
+    return res.status(201).json();
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ msg: "Internal Error" });
   }
 };
 
 exports.uploadFile = async (req, res, next) => {
   const files = req.files;
-  const id = req.params.id;
+  console.log(files);
+  const id = req.userId;
   console.log(files, id);
   const filesArray = [];
   files.forEach((file) => {
@@ -71,17 +84,18 @@ exports.uploadFile = async (req, res, next) => {
     });
   });
   try {
-    await Files.query().insert(filesArray);
+    await Files.query().insertGraph(filesArray);
     return res.status(201).json({ msg: "files inserted" });
   } catch (err) {
+    console.log(err);
     return res.status(500).json({ msg: "Internal Error" });
   }
 };
 
 exports.getFiles = async (req, res, next) => {
   try {
-    console.log(req.params.id);
-    const files = await Files.query().where("user_id", "=", req.params.id);
+    console.log(req.userId);
+    const files = await Files.query().where("user_id", "=", req.userId);
     console.log(files);
     return res.status(200).json(files);
   } catch (error) {

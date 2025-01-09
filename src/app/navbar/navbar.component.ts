@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpserviceService } from '../services/httpservice.service';
 import { CommonModule } from '@angular/common';
@@ -10,23 +10,24 @@ import { CommonModule } from '@angular/common';
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent implements OnInit {
-  token: string = '';
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private httpService: HttpserviceService
+    private httpService: HttpserviceService,
   ) {}
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // this.token = this.httpService.checkToken();
+  }
   user() {
-    return this.httpService.checkToken();
+    return sessionStorage.getItem('token');
   }
   goHome() {
     const id = this.httpService.sendId();
-    this.router.navigateByUrl(`/dashboard/${id}`);
+    this.router.navigateByUrl(`/dashboard`);
   }
   goProfile() {
     const id = this.httpService.sendId();
-    this.router.navigateByUrl(`/profile/${id}`);
+    this.router.navigateByUrl(`/profile`);
   }
 
   logout() {

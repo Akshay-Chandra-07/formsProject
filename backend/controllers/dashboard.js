@@ -7,7 +7,7 @@ exports.users = async (req, res) => {
       "name",
       "email",
       "username",
-      "role"
+      "role",
     );
     res.status(200).json(users);
   } catch (error) {

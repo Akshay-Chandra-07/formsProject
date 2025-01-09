@@ -18,6 +18,7 @@ import { CustomInputComponent } from '../custom-input/custom-input.component';
 import { User } from '../interfaces/user';
 import { HttpserviceService } from '../services/httpservice.service';
 import { FilesComponent } from '../files/files.component';
+import { FilesService } from '../services/files.service';
 
 @Component({
   selector: 'app-profile',
@@ -34,50 +35,75 @@ import { FilesComponent } from '../files/files.component';
 export class ProfileComponent implements OnInit, OnDestroy {
   data: Observable<User> | undefined;
   id: string = '';
+  files: FormData | undefined;
   destroy$ = new Subject<void>();
   editToken: boolean = false;
+  editProfilePicToken: boolean = false;
   isRefreshed: boolean = false;
   constructor(
-    private userService: UsersService,
     private route: ActivatedRoute,
     private router: Router,
-    private httpService: HttpserviceService
+    private userService: UsersService,
+    private httpService: HttpserviceService,
   ) {}
 
   editForm = new FormGroup({
-    name: new FormControl(''),
-    email: new FormControl('', Validators.email),
     oldPassword: new FormControl(''),
     newPassword: new FormControl(''),
   });
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.paramMap.get('id')!;
-    this.data = this.userService.getUser(this.id).pipe(
+    // this.id = this.route.snapshot.paramMap.get('id')!;
+    this.data = this.userService.getUser().pipe(
       takeUntil(this.destroy$),
       catchError((error) => {
         console.log(error);
         sessionStorage.removeItem('token');
         this.router.navigateByUrl('/login');
         return of();
-      })
+      }),
     );
     this.httpService.setId(this.route.snapshot.paramMap.get('id')!);
     this.isRefreshed = true;
+  }
+
+  uploadProfilePicture = new FormGroup({
+    picture: new FormControl(),
+  });
+
+  onFiles(event: any) {
+    this.files = new FormData();
+    const input = event.target as HTMLInputElement;
+    if (input.files) {
+      this.files.append('picture', input.files[0]);
+    }
   }
 
   editDetails() {
     this.editToken = !this.editToken;
   }
 
+  editProfilePic() {
+    this.editProfilePicToken = !this.editProfilePicToken;
+  }
+
+  onPictureSubmit() {
+    this.data = this.userService.updatePicture(this.files!).pipe(
+      takeUntil(this.destroy$),
+      catchError((error) => {
+        console.log(error);
+        return of();
+      }),
+    );
+    this.uploadProfilePicture.reset();
+    this.editProfilePic();
+  }
+
   onSubmit() {
     this.data = this.userService
-      .updateDetails(
-        this.id,
-        this.editForm.value.name ?? undefined,
-        this.editForm.value.email ?? undefined,
-        this.editForm.value.oldPassword ?? undefined,
-        this.editForm.value.newPassword ?? undefined
+      .updatePassowrd(
+        this.editForm.value.oldPassword!,
+        this.editForm.value.newPassword!,
       )
       .pipe(
         takeUntil(this.destroy$),
@@ -86,7 +112,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
           sessionStorage.removeItem('token');
           this.router.navigateByUrl('/login');
           return of();
-        })
+        }),
       );
     this.editDetails();
   }

@@ -14,24 +14,31 @@ export class UsersService {
   getUsers(): Observable<Array<User>> {
     return this.http.get<Array<User>>(`${this.apiUrl}/dashboard/home`);
   }
-  getUser(id: string): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/profile/${id}`);
+  getUser(): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/profile`);
   }
+
+  updatePicture(files: FormData): Observable<User> {
+    console.log('dalksjfl');
+
+    return this.http.post<User>(`${this.apiUrl}/profile/picture-update`, files);
+  }
+
   deleteUser(id: number) {
     return this.http.delete<Object>(`${this.apiUrl}/profile/${id}/delete`);
   }
-  updateDetails(
-    id: string,
-    name?: string,
-    email?: string,
-    oldPassword?: string,
-    newPassword?: string
-  ): Observable<User> {
-    return this.http.put<User>(`${this.apiUrl}/profile/${id}/update`, {
-      name,
-      email,
+  updatePassowrd(oldPassword: string, newPassword: string): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/profile/update-password`, {
       oldPassword,
       newPassword,
+    });
+  }
+
+  updateNameEmail(id: any, name: any, email: any) {
+    return this.http.put(`${this.apiUrl}/profile/update-name-email`, {
+      id,
+      name,
+      email,
     });
   }
 }

@@ -10,22 +10,22 @@ import { userFile } from '../interfaces/userFile';
 export class FilesService {
   constructor(private http: HttpClient) {}
   apiUrl = environment.apiUrl;
-  sendFiles(files: FormData, id: string) {
-    return this.http.post(`${this.apiUrl}/profile/${id}/upload`, files);
+  sendFiles(files: FormData) {
+    return this.http.post(`${this.apiUrl}/profile/upload`, files);
   }
 
-  getUserFiles(id: string):Observable<userFile[]> {
-    console.log(`${this.apiUrl}/profile/${id}/files`);
-    return this.http.get<userFile[]>(`${this.apiUrl}/profile/${id}/files`);
+  getUserFiles(): Observable<userFile[]> {
+    console.log(`${this.apiUrl}/profile/files`);
+    return this.http.get<userFile[]>(`${this.apiUrl}/profile/files`);
   }
 
-  getAllUserFiles(id: string):Observable<userFile[]> {
-    return this.http.get<userFile[]>(`${this.apiUrl}/profile/${id}/allFiles`);
+  getAllUserFiles(): Observable<userFile[]> {
+    return this.http.get<userFile[]>(`${this.apiUrl}/profile/allFiles`);
   }
 
-  deleteFileById(id: string, fileId: string) {
+  deleteFileById(fileId: string) {
     return this.http.delete(
-      `${this.apiUrl}/profile/${id}/files/delete?fileId=${fileId}`
+      `${this.apiUrl}/profile/files/delete?fileId=${fileId}`,
     );
   }
 }

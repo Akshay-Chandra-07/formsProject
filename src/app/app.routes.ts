@@ -19,15 +19,15 @@ export const routes: Routes = [
       import('./login/login.component').then((m) => m.LoginComponent),
   },
   {
-    path: 'dashboard/:id',
+    path: 'dashboard',
     canActivate: [authGuard],
     loadComponent: () =>
       import('./dashboard/dashboard.component').then(
-        (m) => m.DashboardComponent
+        (m) => m.DashboardComponent,
       ),
   },
   {
-    path: 'profile/:id',
+    path: 'profile',
     canActivate: [authGuard],
     loadComponent: () =>
       import('./profile/profile.component').then((m) => m.ProfileComponent),

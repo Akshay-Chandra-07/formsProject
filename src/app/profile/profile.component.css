@@ -1,3 +1,17 @@
 .invalid {
   border: 1px solid red;
 }
+.profile-pic {
+  height: 10rem;
+  width: 10rem;
+  border-radius: 60%;
+}
+
+.picture-container {
+  display: flex;
+  flex-direction: column;
+  height: 15rem;
+  justify-content: space-evenly;
+  text-align: center;
+  align-items: center;
+}

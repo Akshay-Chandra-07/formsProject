@@ -8,9 +8,8 @@ describe('CustomDropdownComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CustomDropdownComponent]
-    })
-    .compileComponents();
+      imports: [CustomDropdownComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CustomDropdownComponent);
     component = fixture.componentInstance;

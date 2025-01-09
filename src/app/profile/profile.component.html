@@ -1,41 +1,65 @@
-<table *ngIf="data | async as data">
-  <tr>
-    <label for="">User Id :</label>
-    <td>{{ data.id }}</td>
-  </tr>
-  <tr>
-    <label for="">Username :</label>
-    <td>{{ data.username }}</td>
-  </tr>
-  <tr>
-    <label for="">Name :</label>
-    <td>{{ data.name }}</td>
-  </tr>
-  <tr>
-    <label for="">Email:</label>
-    <td>{{ data.email }}</td>
-  </tr>
-  <tr>
-    {{
-      data.msg
-    }}
-  </tr>
-</table>
-<button *ngIf="!editToken" (click)="editDetails()">Edit</button>
+<div *ngIf="data | async as data">
+  <div class="picture-container">
+    <img
+      class="profile-pic"
+      [src]="data.user_picture"
+      alt="No Profile Picture"
+    />
+    <button *ngIf="!editProfilePicToken" (click)="editProfilePic()">
+      Edit Picture
+    </button>
+    <button *ngIf="editProfilePicToken" (click)="editProfilePic()">
+      Cancel
+    </button>
+    <div *ngIf="editProfilePicToken">
+      <form [formGroup]="uploadProfilePicture">
+        <input
+          type="file"
+          formControlName="picture"
+          (change)="onFiles($event)"
+        />
+        <button
+          type="button"
+          [disabled]="!uploadProfilePicture.controls.picture.value"
+          (click)="onPictureSubmit()"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
+  </div>
+  <table>
+    <!-- <tr>
+      <td>{{ data.user_picture}}</td>
+    </tr> -->
+    <tr>
+      <label for="">User Id :</label>
+      <td>{{ data.id }}</td>
+    </tr>
+    <tr>
+      <label for="">Username :</label>
+      <td>{{ data.username }}</td>
+    </tr>
+    <tr>
+      <label for="">Name :</label>
+      <td>{{ data.name }}</td>
+    </tr>
+    <tr>
+      <label for="">Email:</label>
+      <td>{{ data.email }}</td>
+    </tr>
+    <tr>
+      {{
+        data.msg
+      }}
+    </tr>
+  </table>
+</div>
+<button *ngIf="!editToken" (click)="editDetails()">Edit Password</button>
 <button *ngIf="editToken" (click)="editDetails()">Cancel</button>
 
 <div *ngIf="editToken">
   <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
-    <label for="">Name:</label>
-    <app-custom-input type="text" formControlName="name"></app-custom-input>
-    <label for="">Email:</label>
-    <app-custom-input
-      type="text"
-      formControlName="email"
-      [class.invalid]="
-        editForm.controls.email.invalid && editForm.controls.email.touched
-      "
-    ></app-custom-input>
     <label for="">Old Password:</label>
     <app-custom-input
       type="text"
@@ -48,7 +72,10 @@
     ></app-custom-input>
     <button
       [disabled]="
-        editForm.controls.email.touched && !editForm.controls.email.valid
+        !(
+          editForm.controls.oldPassword.value &&
+          editForm.controls.newPassword.value
+        )
       "
       type="submit"
     >

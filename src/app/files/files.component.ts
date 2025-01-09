@@ -27,7 +27,7 @@ export class FilesComponent implements OnInit, OnDestroy {
     private filesService: FilesService,
     private httpService: HttpserviceService,
     private userService: UsersService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
   files = new FormData();
   userFiles: Array<userFile> | undefined;
@@ -38,14 +38,14 @@ export class FilesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const id = this.httpService.sendId();
     this.userService
-      .getUser(id)
+      .getUser()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data: User) => {
           this.loggedUser = data;
           console.log(this.loggedUser);
           if (this.loggedUser?.role == 'admin') {
-            this.getAllUserFiles(id);
+            this.getAllUserFiles();
           } else {
             this.getUserFiles();
           }
@@ -63,6 +63,7 @@ export class FilesComponent implements OnInit, OnDestroy {
   onFiles(event: Event) {
     const input = event.target as HTMLInputElement;
     console.log(input);
+    this.files = new FormData();
     if (input.files) {
       for (let i = 0; i < input.files.length; i++) {
         this.files.append('files', input.files[i]);
@@ -71,16 +72,15 @@ export class FilesComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    const id = this.httpService.sendId();
     this.filesService
-      .sendFiles(this.files, id)
+      .sendFiles(this.files)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data: Object) => {
           console.log(data);
-          if(this.loggedUser?.role == "admin"){
-            this.getAllUserFiles(id)
-          }else{
+          if (this.loggedUser?.role == 'admin') {
+            this.getAllUserFiles();
+          } else {
             this.getUserFiles();
           }
         },
@@ -92,8 +92,8 @@ export class FilesComponent implements OnInit, OnDestroy {
     this.uploadForm.reset();
   }
 
-  getAllUserFiles(id: string) {
-    this.filesService.getAllUserFiles(id).subscribe({
+  getAllUserFiles() {
+    this.filesService.getAllUserFiles().subscribe({
       next: (data: userFile[]) => {
         console.log(data);
         this.userFiles = data;
@@ -106,8 +106,7 @@ export class FilesComponent implements OnInit, OnDestroy {
   }
 
   getUserFiles() {
-    const id = this.httpService.sendId();
-    this.filesService.getUserFiles(id).subscribe({
+    this.filesService.getUserFiles().subscribe({
       next: (data: userFile[]) => {
         console.log(data);
         this.userFiles = data;
@@ -122,11 +121,14 @@ export class FilesComponent implements OnInit, OnDestroy {
   deleteFile(fileId: string) {
     console.log('delete');
     console.log(fileId);
-    const id = this.httpService.sendId();
-    this.filesService.deleteFileById(id, fileId).subscribe({
-      next: (data:Object) => {
+    this.filesService.deleteFileById(fileId).subscribe({
+      next: (data: Object) => {
         console.log(data);
-        this.getUserFiles();
+        if (this.loggedUser?.role == 'admin') {
+          this.getAllUserFiles();
+        } else {
+          this.getUserFiles();
+        }
       },
       error: (error) => {
         console.log(error);

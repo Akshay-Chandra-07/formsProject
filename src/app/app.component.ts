@@ -1,11 +1,5 @@
 import { Component } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './navbar/navbar.component';
 
 @Component({

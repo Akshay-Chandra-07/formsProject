@@ -1,3 +1,11 @@
+<br />
+<div *ngIf="this.loggedUser | async as data">
+  <div *ngIf="data.role == 'admin'">
+    <button (click)="downloadData()">Download</button>
+    <br />
+    <br />
+  </div>
+</div>
 <table>
   <thead>
     <th>ID</th>
@@ -11,25 +19,46 @@
   </thead>
   <tbody>
     <tr *ngFor="let row of data; let i = index; trackBy: trackByFn">
-      <td *ngIf="!editToggle">{{ row.id }}</td>
-      <td *ngIf="!editToggle">{{ row.username }}</td>
-      <td *ngIf="!editToggle">{{ row.name }}</td>
-      <td *ngIf="!editToggle">{{ row.email }}</td>
-      <td *ngIf="!editToggle">{{ row.role }}</td>
+      <td>{{ row.id }}</td>
+      <td>{{ row.username }}</td>
+      <td>{{ row.name }}</td>
+      <td>{{ row.email }}</td>
+      <td>{{ row.role }}</td>
       <div *ngIf="this.loggedUser | async as data">
-        <button *ngIf="data.role == 'admin'" (click)="editUser(row.id)">
-          Edit
-        </button>
-        <button
-          *ngIf="data.role == 'admin' && data.id != row.id"
-          (click)="deleteUser(row.id)"
-        >
-          Delete
-        </button>
+        <div *ngIf="data.role == 'admin'">
+          <button *ngIf="editToggle != i + 1" (click)="editUser(i + 1, row.id)">
+            Edit
+          </button>
+          <button *ngIf="editToggle == i + 1" (click)="cancelEdit()">
+            Cancel
+          </button>
+          <button *ngIf="data.id != row.id" (click)="deleteUser(row.id)">
+            Delete
+          </button>
+        </div>
       </div>
     </tr>
   </tbody>
 </table>
+
+<div *ngIf="editToggle">
+  <br /><br />
+  <form [formGroup]="editForm" (ngSubmit)="onEditFormSubmit()">
+    <app-custom-input
+      type="text"
+      [placeholder]="data[editToggle - 1].name"
+      label="Name:"
+      formControlName="name"
+    ></app-custom-input>
+    <app-custom-input
+      type="email"
+      [placeholder]="data[editToggle - 1].email"
+      label="Email:"
+      formControlName="email"
+    ></app-custom-input>
+    <button>Submit</button>
+  </form>
+</div>
 
 <!-- <form [formGroup]="userData">
   <div formArrayName="users">

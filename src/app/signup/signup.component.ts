@@ -34,7 +34,10 @@ export class SignupComponent implements OnDestroy {
   private destroy$ = new Subject<void>();
   roles: Array<string> = ['normal', 'admin'];
 
-  constructor(private router: Router, private http: HttpserviceService) {}
+  constructor(
+    private router: Router,
+    private http: HttpserviceService,
+  ) {}
 
   signForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -60,7 +63,7 @@ export class SignupComponent implements OnDestroy {
         form.value.email,
         form.value.name,
         form.value.role,
-        form.value.password
+        form.value.password,
       )
       .pipe(takeUntil(this.destroy$))
       .subscribe({

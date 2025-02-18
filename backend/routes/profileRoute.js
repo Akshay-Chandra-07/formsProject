@@ -22,6 +22,7 @@ router.post(
   upload.array("picture"),
   profile.updatePicture,
 );
-router.get("/", tokenValidator, profile.getUser);
+
+router.get("/single-user", tokenValidator, profile.getUser);
 
 module.exports = router;

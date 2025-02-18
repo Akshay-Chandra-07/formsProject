@@ -25,12 +25,13 @@ import { CustomInputComponent } from '../custom-input/custom-input.component';
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   data: Array<User> = [];
-  loggedUser: Observable<User> | undefined;
+  loggedUser: User | undefined;
   isAdmin: boolean = false;
   destroy$ = new Subject<void>();
   refreshTable: boolean = false;
   editToggle: number | undefined;
   editUserId: number | undefined;
+  data1: Array<User> = [];
 
   constructor(
     private userService: UsersService,
@@ -39,7 +40,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
   ) {}
   ngOnInit(): void {
-    this.loggedUser = this.userService.getUser().pipe(takeUntil(this.destroy$));
+    this.userService.getUser().pipe(takeUntil(this.destroy$)).subscribe({
+      next:(data:any)=>{
+        this.loggedUser = data
+      },
+      error(error){
+        console.log(error)
+      }
+    });
     // Add below line to test the global error handler
     // throw new Error('Method not implemented.');
     this.loadDashboard();
@@ -57,18 +65,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
     XLSX.writeFile(wb, 'userslist.xlsx'); //downloading the workbook from the browser
   }
 
+  downloadDataStream() {
+    this.userService.downloadExcelStream()
+  }
+  
   deleteUser(id: number) {
     console.log(id);
     this.refreshTable = false;
     this.userService.deleteUser(id).subscribe({
       next: (data: Object) => {
         console.log(data);
-        this.loadDashboard();
       },
       error: (error) => {
         console.log(error);
       },
     });
+    this.loadDashboard();
   }
 
   editUser(id: number, userid: number) {
@@ -104,16 +116,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
       next: (data: User[]) => {
         this.refreshTable = true;
         console.log(data);
-
+        
         this.data = [...data];
         // this.data = [...this.data]
         console.log(this.data);
         this.cdr.markForCheck();
+
+
+        //Forcefully change the reference of this.data
+        // this.data = data ? [...data] : [];
+        // console.log('Updated data:', this.data);
       },
       error: (err) => {
         console.log(err);
       },
     });
+
+    // const logging = [{"id":1,"name":"adlksfjsafa","role":"admin","username":"dalks","email":"dafaf"}]
+    // this.data = [...logging]
+    // console.log(this.data)
   }
 
   trackByFn(index: number, data: any): any {

@@ -1,11 +1,13 @@
-<br />
-<div *ngIf="this.loggedUser | async as data">
-  <div *ngIf="data.role == 'admin'">
+<br>
+<div *ngIf="loggedUser">
+  <div *ngIf="loggedUser.role == 'admin'">
     <button (click)="downloadData()">Download</button>
+    <button (click)="downloadDataStream()">Download  Stream</button>
     <br />
     <br />
   </div>
 </div>
+
 <table>
   <thead>
     <th>ID</th>
@@ -13,8 +15,8 @@
     <th>Name</th>
     <th>Email</th>
     <th>Role</th>
-    <div *ngIf="this.loggedUser | async as data">
-      <th *ngIf="data.role == 'admin'">Action</th>
+    <div *ngIf="loggedUser">
+      <th *ngIf="loggedUser.role == 'admin'">Action</th>
     </div>
   </thead>
   <tbody>
@@ -24,15 +26,15 @@
       <td>{{ row.name }}</td>
       <td>{{ row.email }}</td>
       <td>{{ row.role }}</td>
-      <div *ngIf="this.loggedUser | async as data">
-        <div *ngIf="data.role == 'admin'">
+      <div *ngIf="loggedUser">
+        <div *ngIf="loggedUser.role == 'admin'">
           <button *ngIf="editToggle != i + 1" (click)="editUser(i + 1, row.id)">
             Edit
           </button>
           <button *ngIf="editToggle == i + 1" (click)="cancelEdit()">
             Cancel
           </button>
-          <button *ngIf="data.id != row.id" (click)="deleteUser(row.id)">
+          <button *ngIf="loggedUser.id != row.id" (click)="deleteUser(row.id)">
             Delete
           </button>
         </div>
@@ -59,32 +61,3 @@
     <button>Submit</button>
   </form>
 </div>
-
-<!-- <form [formGroup]="userData">
-  <div formArrayName="users">
-     <div *ngFor="let user of userData.controls.users.controls;let i = index;trackBy:trackByFn">
-      <label for="">User:{{i+1}}</label>
-      <app-custom-input
-      label="UserId:"
-      type="text"
-      [placeholder]="user[0].value.id"
-      ></app-custom-input>
-      <app-custom-input
-      label="Username:"
-      type="text"
-      [placeholder]="user[0].value.username"
-      ></app-custom-input>
-      <app-custom-input
-      label="Email:"
-      type="text"
-      [placeholder]="user[0].value.email"
-      ></app-custom-input>
-      <app-custom-input
-      label="Name:"
-      type="text"
-      [placeholder]="user[0].value.name"
-      [value]="user[0].value.name"
-      ></app-custom-input>
-     </div>
-  </div>
-</form> -->
